@@ -19,13 +19,13 @@ var convertUrl = (exports.convertUrl = function(url, urlPreprocessor) {
     .join("_");
 });
 
-exports.convertMethod = function(mock, urlPreprocessor) {
+exports.convertMethod = function(scope, mock, urlPreprocessor) {
   // 防止重名
   // restful_id_list_id => restful_id_list_id_g
   // or
   // restful_id_list_id => restful_id_list_id_p
   return (
-    convertUrl(mock.url, urlPreprocessor) + "_" + mock.method.toLowerCase()
+    scope.toLowerCase() + '_' + convertUrl(mock.url, urlPreprocessor) + "_" + mock.method.toLowerCase()
   );
 };
 
