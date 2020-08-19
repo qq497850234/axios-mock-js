@@ -3,7 +3,9 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { defaultsDeep } from "lodash";
 
 const instance = axios.create({
-  withCredentials: true,
+  // 因为后台CORS规范中access-control-origin返回的是*
+  // 并且他们不需要cookie，所以暂且取消自动携带cookie
+  withCredentials: false,
   headers: { "X-Requested-With": "XMLHttpRequest" }
 });
 

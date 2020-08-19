@@ -17,5 +17,5 @@ export default next => req => {
   if (!req.headers) {
     req.headers = {};
   }
-  Object.assign(req.headers, { token: getToken() }), next(req);
+  Object.assign(req.headers, { accessToken: getToken() }), next(req);
 };
