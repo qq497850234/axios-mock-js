@@ -8,7 +8,8 @@
  */
 import { compose } from './utils';
 import useRIInjectToken from './middware/useInjectToken';
-
+import useCatchResponseCode from './middware/useCatchResponseCode';
+import useParseResponse from './middware/useParseResponse';
 /**
  * 应用中间件,返回promise，提供异步能力
  * 自行书写中间件的时候，需要注意保证代码的健壮性，如尽可能的判断值是否存在；
@@ -26,5 +27,5 @@ const applyMiddleware = (...middleware) => req => {
   });
 };
 const createRequestInterceptorMiddleware = applyMiddleware(useRIInjectToken);
-const createResponseInterceptorMiddleware = res => res;
+const createResponseInterceptorMiddleware = applyMiddleware(useCatchResponseCode, useParseResponse);
 export { applyMiddleware, createRequestInterceptorMiddleware, createResponseInterceptorMiddleware };
