@@ -7,16 +7,20 @@
  *
  */
 import { Notification } from 'element-ui';
-import { redirectToLogin } from '@utils';
+import { delToken, redirectToLogin } from '@utils';
 const showNotificationMsg = msg => {
   Notification.error(msg);
 };
+const handleUserError = () => {
+  delToken();
+  redirectToLogin();
+};
 const responseCodeMap = {
   '00000': { success: true, msg: 'success' },
-  A0200: { success: false, msg: '用户登录异常', handler: redirectToLogin },
-  A0230: { success: false, msg: '用户登录已过期', handler: redirectToLogin },
-  A0311: { success: false, msg: '授权已过期', handler: redirectToLogin },
-  A0440: { success: false, msg: '用户操作异常', handler: redirectToLogin },
+  A0200: { success: false, msg: '用户登录异常', handler: handleUserError },
+  A0230: { success: false, msg: '用户登录已过期', handler: handleUserError },
+  A0311: { success: false, msg: '授权已过期', handler: handleUserError },
+  A0440: { success: false, msg: '用户操作异常', handler: handleUserError },
 };
 /**
  * 处理response code
