@@ -16,6 +16,7 @@ const handleUserError = () => {
   redirectToLogin();
 };
 const responseCodeMap = {
+  error: { success: false, msg: '服务器异常，请稍后重试或联系管理员' },
   '00000': { success: true, msg: 'success' },
   A0200: { success: false, msg: '用户登录异常', handler: handleUserError },
   A0230: { success: false, msg: '用户登录已过期', handler: handleUserError },
@@ -28,7 +29,9 @@ const responseCodeMap = {
  * @returns {Function}
  */
 export default next => res => {
-  const { code, msg } = res?.data || {};
+  // 确保存在
+  res.data = res?.data || { code: 'error' };
+  const { code, msg } = res.data;
   const codeObj = responseCodeMap[code] || { success: false };
   // 注入success标识
   res.data.success = codeObj.success;
