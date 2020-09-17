@@ -13,6 +13,10 @@ import { isComplexType, connectEveryProperty } from '@bf/util';
 
 const CancelToken = axios.CancelToken;
 
+// 白名单
+// 会跳过白名单
+const whiteList = [];
+
 // 缓存fetch请求
 const fetchMapCache = {};
 
@@ -52,6 +56,10 @@ function isAlreadyExisted(symbol) {
   return fetchMapCache[symbol];
 }
 
+function inWhiteList(req) {
+  return whiteList.includes(req.url);
+}
+
 /**
  * 当request请求来时
  * 需要缓存该req
@@ -60,27 +68,28 @@ function isAlreadyExisted(symbol) {
  * @returns {function(...[*]=)}
  */
 const useRepeatFetchWatcherRequest = next => req => {
-  const symbolKey = createUniqueSymbol(req);
+  if (!inWhiteList(req)) {
+    const symbolKey = createUniqueSymbol(req);
 
-  // 保存key
-  req.useRepeatFetchWatcher = {
-    uniqueSymbolKey: symbolKey,
-    fetchMapCache,
-  };
+    // 保存key
+    req.useRepeatFetchWatcher = {
+      uniqueSymbolKey: symbolKey,
+      fetchMapCache,
+    };
 
-  // 判断是否已经存在symbolKey
-  // 即存在一模一样的fetch请求未完成
-  // 这个时候应该去取消掉前面发起的请求
-  if (isAlreadyExisted(symbolKey)) {
-    fetchMapCache[symbolKey]();
-    console.log('请求被取消！！！');
+    // 判断是否已经存在symbolKey
+    // 即存在一模一样的fetch请求未完成
+    // 这个时候应该去取消掉前面发起的请求
+    if (isAlreadyExisted(symbolKey)) {
+      fetchMapCache[symbolKey]();
+      console.log('请求被取消！！！', symbolKey);
+    }
+
+    // 因为可能存在其他中间件，所以需要做一定的兼容处理
+    // 兼容useCreateCancelToken中间件
+    fetchMapCache[symbolKey] =
+      req.useCreateCancelToken?.executeCancelFetch || createCancelTokenExecute(req);
   }
-
-  // 因为可能存在其他中间件，所以需要做一定的兼容处理
-  // 兼容useCreateCancelToken中间件
-  fetchMapCache[symbolKey] =
-    req.useCreateCancelToken?.executeCancelFetch || createCancelTokenExecute(req);
-
   next(req);
 };
 
