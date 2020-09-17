@@ -6,7 +6,7 @@
  * Time: 12:04
  *
  */
-import { getToken } from '@utils/authority';
+import { getToken } from '@utils';
 
 /**
  * 注入headers token的中间件

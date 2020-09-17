@@ -12,7 +12,9 @@ useRequestInterceptor(req => createRequestInterceptorMiddleware(req));
 useResponseInterceptor(
   res => createResponseInterceptorMiddleware(res),
   error => {
-    Notification.error(error.message);
+    if (error?.message) {
+      Notification.error(error.message);
+    }
   }
 );
 

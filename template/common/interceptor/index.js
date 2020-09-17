@@ -7,10 +7,18 @@
  *
  */
 import { compose } from './utils';
-import useRIInjectToken from './middware/useInjectToken';
-import useCatchResponseCode from './middware/useCatchResponseCode';
-import useDeleteGetEmptyParams from './middware/useDeleteGetEmptyParams';
-import useParseResponse from './middware/useParseResponse';
+import useRIInjectToken from './middware/useInjectToken.request';
+import useCatchResponseCode from './middware/useCatchCode.response';
+import useDeleteGetEmptyParams from './middware/useDeleteGetEmptyParams.request';
+import useParseResponse from './middware/useParseResponse.response';
+import {
+  useCreateCancelTokenResponse,
+  useCreateCancelTokenRequest,
+} from './middware/useCreateCancelToken';
+import {
+  useRepeatFetchWatcherResponse,
+  useRepeatFetchWatcherRequest,
+} from './middware/useRepeatFetchWatcher';
 
 /**
  * 应用中间件,返回promise，提供异步能力
@@ -29,10 +37,17 @@ const applyMiddleware = (...middleware) => req => {
   });
 };
 const createRequestInterceptorMiddleware = applyMiddleware(
+  useCreateCancelTokenRequest,
+  useRepeatFetchWatcherRequest,
   useRIInjectToken,
   useDeleteGetEmptyParams
 );
-const createResponseInterceptorMiddleware = applyMiddleware(useCatchResponseCode, useParseResponse);
+const createResponseInterceptorMiddleware = applyMiddleware(
+  useCreateCancelTokenResponse,
+  useRepeatFetchWatcherResponse,
+  useCatchResponseCode,
+  useParseResponse
+);
 export {
   applyMiddleware,
   useDeleteGetEmptyParams,
