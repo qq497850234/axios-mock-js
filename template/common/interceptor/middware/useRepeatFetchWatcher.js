@@ -56,6 +56,14 @@ function isAlreadyExisted(symbol) {
   return fetchMapCache[symbol];
 }
 
+/**
+ * 添加白名单
+ * @param list
+ */
+function addWhiteList(list = []) {
+  whiteList.push(...list);
+}
+
 function inWhiteList(req) {
   return whiteList.includes(req.url);
 }
@@ -105,4 +113,4 @@ const useRepeatFetchWatcherResponse = next => res => {
   next(res);
 };
 
-export { useRepeatFetchWatcherRequest, useRepeatFetchWatcherResponse };
+export { addWhiteList, useRepeatFetchWatcherRequest, useRepeatFetchWatcherResponse };

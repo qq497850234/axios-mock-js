@@ -16,6 +16,7 @@ import {
   useCreateCancelTokenRequest,
 } from './middware/useCreateCancelToken';
 import {
+  addWhiteList as addRepeatWatcherWhiteList,
   useRepeatFetchWatcherResponse,
   useRepeatFetchWatcherRequest,
 } from './middware/useRepeatFetchWatcher';
@@ -50,6 +51,11 @@ const createResponseInterceptorMiddleware = applyMiddleware(
 );
 export {
   applyMiddleware,
+  addRepeatWatcherWhiteList,
+  useCreateCancelTokenResponse,
+  useCreateCancelTokenRequest,
+  useRepeatFetchWatcherResponse,
+  useRepeatFetchWatcherRequest,
   useDeleteGetEmptyParams,
   createRequestInterceptorMiddleware,
   createResponseInterceptorMiddleware,
