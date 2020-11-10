@@ -8,7 +8,7 @@ function {{$$.convertMethod(project.name, mock, project.urlPreprocessor)}}(body 
     method: '{{mock.method}}',
     url: <% if($$.isREST(mock.url)) {%>convertRESTAPI('{{$$.urlPreprocess(mock.url, _.find(config.projects, {id: data.project._id}).urlPreprocessor)}}', opts)<%} else {%> '{{$$.urlPreprocess(mock.url, _.find(config.projects, {id: data.project._id}).urlPreprocessor)}}'<% } %>,
     opts: {
-      {{mock.method === 'get' ? 'params' : 'data'}}: body,
+      {{{query: 'params', payload: 'data'}[project.payloadMode] || (mock.method === 'get' ? 'params' : 'data')}}: body,
       ...opts
     }
   });
