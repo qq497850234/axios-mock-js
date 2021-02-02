@@ -12,9 +12,8 @@ useRequestInterceptor(req => createRequestInterceptorMiddleware(req));
 useResponseInterceptor(
   res => createResponseInterceptorMiddleware(res),
   error => {
-    if (error?.message) {
-      Notification.error(error.message);
-    }
+    Notification.error(error.message || '网络错误，请联系管理员');
+    return { success: false };
   }
 );
 
