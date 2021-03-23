@@ -9,7 +9,7 @@
  */
 
 import axios from 'axios';
-import { isComplexType, connectEveryProperty } from '@bf/util';
+import { isComplexType, isObject } from '@bf/util';
 
 const CancelToken = axios.CancelToken;
 
@@ -21,13 +21,30 @@ const whiteList = [];
 const fetchMapCache = {};
 
 /**
+ * 深入连接每一个属性
+ * @param obj
+ * @returns {string}
+ */
+function connectEveryPropertyDeep(obj) {
+  if (!obj || (!isObject(obj) && !Array.isArray(obj))) return '';
+  return Object.keys(obj).reduce(function(pre, next) {
+    let v = obj[next];
+    if (v && isComplexType(v)) {
+      v = connectEveryPropertyDeep(v);
+    }
+    pre += '' + next + '=' + v + '&';
+    return pre;
+  }, '');
+}
+
+/**
  * 连接object
  * @param obj
  * @returns {*}
  */
 function connectObject(obj) {
   if (!isComplexType(obj)) return obj;
-  return connectEveryProperty(obj, '=', '&');
+  return connectEveryPropertyDeep(obj);
 }
 
 /**
